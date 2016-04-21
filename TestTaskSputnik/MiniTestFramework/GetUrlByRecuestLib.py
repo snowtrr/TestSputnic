@@ -1,10 +1,9 @@
+import requests
 import os
-import urllib
 
 from xml.dom.minidom import *
-from urlparse import *
-from urllib2 import urlopen
 from datetime import datetime
+from urlparse import *
 
 
 class GetUrlByQuery:
@@ -14,27 +13,21 @@ class GetUrlByQuery:
         query_args = {'q': '!{bangId} {searchQuery}'.format(bangId=bang_id, searchQuery=search_query),
                       'format': '{format}'.format(format=query_format),
                       'no_redirect': '{redirect}'.format(redirect=redirect)}
-        encoded_args = urllib.urlencode(query_args)
-        url = 'http://api.duckduckgo.com/?' + encoded_args
 
-        self._url = urlopen(url)
+        url = requests.get('http://api.duckduckgo.com/?', params=query_args)
+
+        self._url = url
         self._redirectUrl = ''
 
     def GetUrl(self):
         """Gets the URL by creating query."""
-
-        # Get source xml
-        url = self._url
-        bytecode = url.read()
-        xml_str = bytecode.decode()
-        url.close()
 
         _tempName = 'tmp_{date}'.format(
                 date=datetime.strftime(datetime.now(), "%Y%m%d%H%M%S"))
 
         # Write xml to temp file
         with open(_tempName, 'w') as f:
-            f.write(xml_str)
+            f.write(self._url.content)
 
         # Get Redirect element from file
         xml_file = parse(_tempName)

@@ -34,14 +34,17 @@ def test_check_ddg_api(driver, bang_id, expected):
     print '\n{separate}'.format(separate='='*60)
     print 'Check DDG API'
 
-    url = GetUrlByDdgApi(bang_id, testQuery).GetUrl()
+    getUrlByDdgApi = GetUrlByDdgApi(bang_id, testQuery)
+    url = getUrlByDdgApi.GetUrl()
+
     driver.get(url)
 
     # Print to console current page URL
     print 'Url getted by Api: {URL}'.format(URL=url)
+    print 'Url parsed URL: {URL}'.format(URL=getUrlByDdgApi.GetDomainName())
 
     # Check expected result
-    assert expected in url
+    assert expected in getUrlByDdgApi.GetDomainName()
 
     # Check search results
     assert PageObject(driver).CheckQuery(testQuery)
@@ -57,14 +60,16 @@ def test_check_query(driver, bang_id, expected):
     print '\n{separate}'.format(separate='='*60)
     print 'Check query'
 
-    url = GetUrlByQuery(bang_id, testQuery).GetUrl()
+    getUrlByQuery = GetUrlByQuery(bang_id, testQuery)
+    url = getUrlByQuery.GetUrl()
     driver.get(url)
 
     # Print to console current page URL
     print 'Url getted by query: {URL}'.format(URL=url)
+    print 'Url parsed URL: {URL}'.format(URL=getUrlByQuery.GetDomainName())
 
     # Check expected result
-    assert expected in url
+    assert expected in getUrlByQuery.GetDomainName()
 
     # Check search results
     assert PageObject(driver).CheckQuery(testQuery)
